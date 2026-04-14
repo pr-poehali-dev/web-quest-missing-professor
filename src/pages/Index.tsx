@@ -809,7 +809,7 @@ export default function Index() {
                 {[
                   { icon: "Phone", label: "Телефон горячей линии", value: "8-800-555-КОД (563)", sub: "Бесплатно, круглосуточно" },
                   { icon: "Mail", label: "Email спецотдела", value: "findprofessor@websleuth.ru", sub: "Ответ в течение 2 часов" },
-                  { icon: "MapPin", label: "Адрес штаба поисков", value: "ул. Детективная, 13, офис 404", sub: "Пн–Вс, 08:00–22:00" },
+                  { icon: "MapPin", label: "Адрес штаба поисков", value: "ул. Пушкина, дом Колотушкина", sub: "Пн–Вс, 08:00–22:00" },
                   { icon: "Send", label: "Телеграм-канал", value: "@find_professor_kod", sub: "Обновления в реальном времени" },
                 ].map((c) => (
                   <div
