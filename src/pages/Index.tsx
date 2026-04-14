@@ -2,6 +2,54 @@ import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 const PROFESSOR_IMG = "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/65c5e760-2c88-4699-a61d-d75d3970e2ae.jpg";
+const MAP_IMG = "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/166937b0-4e3c-4b24-b85d-e4a94c178822.jpg";
+
+const mapMarkers = [
+  { color: "#cc1a1a", emoji: "🔴", label: "Последний сигнал телефона", time: "11:30", x: "28%", y: "38%" },
+  { color: "#2563eb", emoji: "🔵", label: "Место находки очков", time: "12:00", x: "55%", y: "57%" },
+  { color: "#ca8a04", emoji: "🟡", label: "Подозрительная активность", time: "13:15", x: "72%", y: "30%" },
+];
+
+const witnesses = [
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/82a257fc-7fa0-4e56-90a1-e53f677d9d18.jpg",
+    name: "Мария Петровна",
+    age: "68 лет",
+    role: "Пенсионерка, жительница района",
+    time: "11:15",
+    testimony: "Видела мужчину в синей куртке и красном шарфе у фонтана. Он нервно оглядывался и говорил по телефону.",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/6e0f6c4d-d9e5-405d-b368-a19d70ec2176.jpg",
+    name: "Иван Соколов",
+    age: "31 год",
+    role: "Охранник парка",
+    time: "12:00",
+    testimony: "Обнаружил очки в траве у дорожки. Никого рядом не было. Стёкла треснуты, будто наступили.",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/add20634-a9ff-448e-bce3-04a84a003258.jpg",
+    name: "Аня Лебедева",
+    age: "22 года",
+    role: "Студентка, проходила мимо",
+    time: "11:45",
+    testimony: "Слышала странные звуки из кустов — приглушённые голоса. Один голос был явно взволнован.",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/3434526a-efb3-4592-9fd9-5e73b00fceec.jpg",
+    name: "Сергей Катков",
+    age: "45 лет",
+    role: "Водитель такси",
+    time: "09:50",
+    testimony: "Подвёз профессора до парка. Тот казался крайне взволнованным, всё время смотрел в зеркало заднего вида.",
+  },
+];
+
+const news = [
+  { date: "15 мая, 18:30", text: "Полиция прочесала весь парк — новых улик не обнаружено. Поиски продолжаются." },
+  { date: "15 мая, 20:00", text: "Назначена награда в 100 000 рублей за информацию о местонахождении профессора Кода." },
+  { date: "16 мая, 09:00", text: "К расследованию подключились федеральные эксперты по киберпреступлениям." },
+];
 
 const clues = [
   {
@@ -579,36 +627,232 @@ export default function Index() {
 
       <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #cc1a1a 50%, #1f1f1f 80%, transparent)" }} />
 
-      {/* ─── PLACEHOLDER SECTIONS ─── */}
-      {[
-        { id: "karta", title: "КАРТА ПОИСКА И СВИДЕТЕЛИ", bg: "#0a0a0a", num: 3 },
-        { id: "kontakty", title: "ПРЕСС-ЦЕНТР И КОНТАКТЫ", bg: "#0c0c0c", num: 4 },
-      ].map((s, i) => (
-        <div key={s.id}>
-          <section id={s.id} className="py-24" style={{ background: s.bg }}>
-            <div className="max-w-6xl mx-auto px-6">
-              <div
-                className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-3"
-                style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ {s.num}
-              </div>
-              <h2
-                className="font-bold text-white mb-4"
-                style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "0.06em" }}
-              >
-                {s.title}
-              </h2>
-              <p style={{ color: "#444", fontFamily: "'IBM Plex Mono', monospace", fontSize: "0.8rem" }}>
-                — Раздел будет наполнен на следующем этапе —
-              </p>
+      {/* ─── КАРТА ПОИСКА И СВИДЕТЕЛИ ─── */}
+      <section id="karta" className="py-24" style={{ background: "#0a0a0a" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+            <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ 3 / ОПЕРАТИВНЫЕ ДАННЫЕ
+          </div>
+          <h2 className="font-bold text-white mb-10" style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "0.06em" }}>
+            КАРТА ПОИСКА И ПОКАЗАНИЯ СВИДЕТЕЛЕЙ
+          </h2>
+
+          {/* Карта */}
+          <div className="mb-6 relative overflow-hidden" style={{ border: "1px solid #222", background: "#0e0e0e" }}>
+            <div className="relative" style={{ aspectRatio: "16/7" }}>
+              <img
+                src={MAP_IMG}
+                alt="Карта поиска"
+                className="w-full h-full object-cover"
+                style={{ filter: "grayscale(50%) brightness(0.7) contrast(1.1)" }}
+              />
+              {/* Оверлей */}
+              <div style={{ position: "absolute", inset: 0, background: "rgba(10,10,10,0.35)" }} />
+              {/* Метки на карте */}
+              {mapMarkers.map((m) => (
+                <div
+                  key={m.label}
+                  className="absolute flex flex-col items-center group"
+                  style={{ left: m.x, top: m.y, transform: "translate(-50%, -50%)" }}
+                >
+                  <div
+                    className="w-5 h-5 rounded-full border-2 animate-pulse flex items-center justify-center"
+                    style={{ borderColor: m.color, background: `${m.color}55`, boxShadow: `0 0 12px ${m.color}88` }}
+                  />
+                  <div
+                    className="mt-1 px-2 py-0.5 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: "rgba(0,0,0,0.85)", color: m.color, fontFamily: "'IBM Plex Mono', monospace", border: `1px solid ${m.color}55` }}
+                  >
+                    {m.time}
+                  </div>
+                </div>
+              ))}
             </div>
-          </section>
-          {i < 1 && (
-            <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #333 50%, #1f1f1f 80%, transparent)" }} />
-          )}
+            <div className="px-4 py-2 text-xs font-mono" style={{ background: "#0e0e0e", color: "#444", fontFamily: "'IBM Plex Mono', monospace", borderTop: "1px solid #1a1a1a" }}>
+              КАРТА РАЙОНА · МАСШТАБ 1:5000 · ОБНОВЛЕНО 16.05.2024
+            </div>
+          </div>
+
+          {/* Легенда меток */}
+          <div className="flex flex-wrap gap-4 mb-14">
+            {mapMarkers.map((m) => (
+              <div key={m.label} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ background: m.color, boxShadow: `0 0 6px ${m.color}` }}
+                />
+                <span className="text-sm" style={{ color: "#888" }}>
+                  <span style={{ color: m.color, fontFamily: "'IBM Plex Mono', monospace", fontSize: "0.75rem" }}>{m.time}</span>
+                  {" — "}{m.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Свидетели */}
+          <div className="text-xs font-mono tracking-widest uppercase mb-6 flex items-center gap-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+            <span style={{ color: "#cc1a1a" }}>▸</span>
+            ПОКАЗАНИЯ СВИДЕТЕЛЕЙ
+            <span style={{ flex: 1, height: "1px", background: "#1f1f1f", display: "block" }} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {witnesses.map((w, i) => (
+              <div
+                key={w.name}
+                className="flex gap-4 p-5 transition-all duration-300 hover:-translate-y-0.5"
+                style={{ background: "#0e0e0e", border: "1px solid #1f1f1f" }}
+              >
+                <div className="flex-shrink-0">
+                  <div className="relative overflow-hidden" style={{ width: "72px", height: "72px", border: "2px solid #2a2a2a" }}>
+                    <img
+                      src={w.img}
+                      alt={w.name}
+                      className="w-full h-full object-cover"
+                      style={{ filter: "grayscale(60%) contrast(1.1)" }}
+                    />
+                    <div
+                      className="absolute bottom-0 left-0 right-0 text-center text-xs font-mono"
+                      style={{ background: "rgba(0,0,0,0.8)", color: "#cc1a1a", fontFamily: "'IBM Plex Mono', monospace", padding: "1px" }}
+                    >
+                      СВ-0{i + 1}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-0.5">
+                    <h4 className="font-bold text-white" style={{ fontFamily: "'Oswald', sans-serif", letterSpacing: "0.04em" }}>{w.name}</h4>
+                    <span className="text-xs font-mono flex-shrink-0" style={{ color: "#cc1a1a", fontFamily: "'IBM Plex Mono', monospace" }}>{w.time}</span>
+                  </div>
+                  <p className="text-xs mb-2" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>{w.age} · {w.role}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "#888" }}>«{w.testimony}»</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
+      </section>
+
+      <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #cc1a1a 50%, #1f1f1f 80%, transparent)" }} />
+
+      {/* ─── ПРЕСС-ЦЕНТР И КОНТАКТЫ ─── */}
+      <section id="kontakty" className="py-24" style={{ background: "#0c0c0c" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Логотип */}
+          <div className="flex items-center gap-4 mb-10">
+            <div
+              className="flex items-center gap-3 px-5 py-3"
+              style={{ border: "2px solid #cc1a1a", background: "rgba(204,26,26,0.06)" }}
+            >
+              <div className="w-10 h-10 flex items-center justify-center" style={{ background: "#cc1a1a" }}>
+                <span className="text-white font-bold text-lg" style={{ fontFamily: "'Oswald', sans-serif" }}>WS</span>
+              </div>
+              <div>
+                <div className="font-bold text-white text-lg tracking-widest" style={{ fontFamily: "'Oswald', sans-serif" }}>WEB-SLEUTH</div>
+                <div className="text-xs tracking-widest" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>DETECTIVE AGENCY · EST. 2019</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+            <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ 4 / ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ
+          </div>
+          <h2 className="font-bold text-white mb-10" style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "0.06em" }}>
+            ОФИЦИАЛЬНЫЙ ПРЕСС-ЦЕНТР
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* Лево: новости + заявление */}
+            <div>
+              <div className="text-xs font-mono tracking-widest uppercase mb-5 flex items-center gap-2" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+                <span style={{ color: "#cc1a1a" }}>▸</span> ОПЕРАТИВНЫЕ СВОДКИ
+              </div>
+              <div className="flex flex-col gap-3 mb-8">
+                {news.map((n, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 p-4"
+                    style={{ background: "#0e0e0e", border: "1px solid #1f1f1f", borderLeft: "2px solid #333" }}
+                  >
+                    <span className="text-xs font-mono flex-shrink-0 pt-0.5" style={{ color: "#cc1a1a", fontFamily: "'IBM Plex Mono', monospace", minWidth: "110px" }}>{n.date}</span>
+                    <p className="text-sm leading-relaxed" style={{ color: "#888" }}>{n.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Официальное заявление */}
+              <div
+                className="p-5"
+                style={{ border: "1px solid #2a2a2a", borderLeft: "3px solid #888", background: "#0e0e0e" }}
+              >
+                <div className="text-xs font-mono tracking-widest uppercase mb-3 flex items-center gap-2" style={{ color: "#888", fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <Icon name="Shield" size={12} />
+                  ОФИЦИАЛЬНОЕ ЗАЯВЛЕНИЕ ПОЛИЦИИ
+                </div>
+                <p className="text-sm leading-relaxed italic" style={{ color: "#aaa" }}>
+                  «Уважаемые граждане! Ведутся активные поиски. Просим всех, кто обладает какой-либо информацией,
+                  немедленно связаться по указанным ниже контактам. Не пытайтесь задерживать подозреваемых самостоятельно!»
+                </p>
+                <p className="text-xs mt-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+                  — Пресс-служба УМВД, 16 мая 2024
+                </p>
+              </div>
+            </div>
+
+            {/* Право: контакты */}
+            <div>
+              <div className="text-xs font-mono tracking-widest uppercase mb-5 flex items-center gap-2" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+                <span style={{ color: "#cc1a1a" }}>▸</span> СВЯЗАТЬСЯ С АГЕНТСТВОМ
+              </div>
+
+              <div className="flex flex-col gap-3 mb-6">
+                {[
+                  { icon: "Phone", label: "Телефон горячей линии", value: "8-800-555-КОД (563)", sub: "Бесплатно, круглосуточно" },
+                  { icon: "Mail", label: "Email спецотдела", value: "findprofessor@websleuth.ru", sub: "Ответ в течение 2 часов" },
+                  { icon: "MapPin", label: "Адрес штаба поисков", value: "ул. Детективная, 13, офис 404", sub: "Пн–Вс, 08:00–22:00" },
+                  { icon: "Send", label: "Телеграм-канал", value: "@find_professor_kod", sub: "Обновления в реальном времени" },
+                ].map((c) => (
+                  <div
+                    key={c.label}
+                    className="flex items-start gap-4 p-4 transition-colors duration-200 hover:border-gray-700"
+                    style={{ background: "#0e0e0e", border: "1px solid #1f1f1f" }}
+                  >
+                    <div
+                      className="w-9 h-9 flex items-center justify-center flex-shrink-0 mt-0.5"
+                      style={{ background: "rgba(204,26,26,0.12)", border: "1px solid rgba(204,26,26,0.3)" }}
+                    >
+                      <Icon name={c.icon} size={15} style={{ color: "#cc1a1a" }} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-0.5" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>{c.label}</div>
+                      <div className="text-white font-medium" style={{ fontSize: "0.9rem" }}>{c.value}</div>
+                      <div className="text-xs mt-0.5" style={{ color: "#555" }}>{c.sub}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Красное предупреждение */}
+              <div
+                className="p-4"
+                style={{ border: "1px solid rgba(204,26,26,0.5)", borderLeft: "3px solid #cc1a1a", background: "rgba(204,26,26,0.06)" }}
+              >
+                <div className="flex items-start gap-3">
+                  <Icon name="AlertTriangle" size={16} style={{ color: "#cc1a1a", flexShrink: 0, marginTop: "2px" }} />
+                  <div>
+                    <div className="text-xs font-mono tracking-widest uppercase mb-1" style={{ color: "#cc1a1a", fontFamily: "'IBM Plex Mono', monospace" }}>
+                      ВНИМАНИЕ
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: "#c8c8c8" }}>
+                      Распространяется ложная информация о похитителях. Доверяйте только официальным источникам агентства WebSleuth.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ─── FOOTER ─── */}
       <footer className="py-8" style={{ background: "#080808", borderTop: "1px solid #1a1a1a" }}>
