@@ -3,6 +3,57 @@ import Icon from "@/components/ui/icon";
 
 const PROFESSOR_IMG = "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/65c5e760-2c88-4699-a61d-d75d3970e2ae.jpg";
 
+const clues = [
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/35afe493-5585-4006-9215-c0be55d2967b.jpg",
+    label: "Улика №1",
+    title: "Очки в траве",
+    desc: "Обнаружены охранником парка в 12:00. Стекло треснуто. Находятся на экспертизе.",
+    tag: "ВЕЩДОК А-01",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/b8bea04a-a4fc-47b3-ba54-35161eae8ded.jpg",
+    label: "Улика №2",
+    title: "Странная записка",
+    desc: "Найдена в кармане пиджака профессора, обнаруженного на скамейке. Содержит зашифрованный текст.",
+    tag: "ВЕЩДОК Б-02",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/a6ea734c-7411-4000-bbce-ea7b99553345/files/13d0b3f1-8c1d-4680-84e8-f65b86c29769.jpg",
+    label: "Улика №3",
+    title: "Карта с отметкой",
+    desc: "Распечатка карты района с красным крестом в секторе B-7. Найдена рядом с очками.",
+    tag: "ВЕЩДОК В-03",
+  },
+];
+
+const versions = [
+  {
+    num: "01",
+    title: "Похищение",
+    prob: "Высокая",
+    probColor: "#cc1a1a",
+    detective: "Детектив Громов",
+    desc: "Профессора могли похитить конкуренты за его последнее изобретение — алгоритм взлома любой криптографической системы. Угрозы в последние недели подтверждают версию.",
+  },
+  {
+    num: "02",
+    title: "Инсценировка",
+    prob: "Средняя",
+    probColor: "#c8830a",
+    detective: "Детектив Лунина",
+    desc: "Профессор мог инсценировать исчезновение, чтобы скрыться от давних врагов или передать разработки третьей стороне. Финансовые операции последних дней вызывают вопросы.",
+  },
+  {
+    num: "03",
+    title: "Провал памяти",
+    prob: "Низкая",
+    probColor: "#4a7c59",
+    detective: "Детектив Чен",
+    desc: "Из-за хронического переутомления профессор мог потерять ориентацию и уйти, не осознавая своих действий. Коллеги отмечали признаки стресса.",
+  },
+];
+
 const timeline = [
   { time: "09:50", event: "Профессор сел в такси у своего дома. По словам водителя, выглядел взволнованным и нервно оглядывался." },
   { time: "10:15", event: "Замечен у входа в университет. Коллеги отмечают, что он торопился и уклонился от разговора." },
@@ -416,11 +467,122 @@ export default function Index() {
       {/* ─── DIVIDER ─── */}
       <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #cc1a1a 50%, #1f1f1f 80%, transparent)" }} />
 
+      {/* ─── УЛИКИ ─── */}
+      <section id="uliki" className="py-24" style={{ background: "#0c0c0c" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+            <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ 2 / МАТЕРИАЛЫ ДЕЛА
+          </div>
+          <h2 className="font-bold text-white mb-12" style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "0.06em" }}>
+            НАЙДЕННЫЕ УЛИКИ
+          </h2>
+
+          {/* 3 фото-улики */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {clues.map((c) => (
+              <div
+                key={c.tag}
+                className="group relative overflow-hidden"
+                style={{ border: "1px solid #222", background: "#0e0e0e" }}
+              >
+                <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                  <img
+                    src={c.img}
+                    alt={c.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ filter: "grayscale(40%) contrast(1.1)" }}
+                  />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)" }} />
+                  <div
+                    className="absolute top-3 left-3 px-2 py-1 text-xs font-mono tracking-widest"
+                    style={{ background: "rgba(204,26,26,0.9)", color: "#fff", fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    {c.tag}
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="text-xs font-mono mb-1" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>{c.label}</div>
+                  <h3 className="text-white font-bold mb-2" style={{ fontFamily: "'Oswald', sans-serif", fontSize: "1.1rem", letterSpacing: "0.06em" }}>{c.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "#777" }}>{c.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Расшифровка записки */}
+          <div
+            className="mb-16 p-6 md:p-8"
+            style={{ background: "#111", border: "1px solid #2a1a1a", borderLeft: "3px solid #cc1a1a" }}
+          >
+            <div className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-2" style={{ color: "#cc1a1a", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <Icon name="FileText" size={14} />
+              РАСШИФРОВКА ЗАПИСКИ / ЛАБОРАТОРИЯ ФБР · 16.05.2024
+            </div>
+            <div
+              className="font-mono text-sm leading-relaxed p-4"
+              style={{ background: "#0a0a0a", color: "#a0a0a0", fontFamily: "'IBM Plex Mono', monospace", border: "1px solid #1f1f1f" }}
+            >
+              <p style={{ color: "#cc1a1a", marginBottom: "8px" }}>[ОРИГИНАЛ — зашифрован]</p>
+              <p style={{ marginBottom: "12px", color: "#555" }}>«7-Б · Σ≠∅ · когда часы пробьют полночь · сектор Омега · ключ у того, кто не спит»</p>
+              <p style={{ color: "#cc1a1a", marginBottom: "8px" }}>[РАСШИФРОВКА — частичная]</p>
+              <p>Предположительно указывает на место встречи в секторе B-7 парка в полночь. «Ключ» может означать USB-накопитель с разработками профессора. Личность получателя устанавливается.</p>
+            </div>
+            <p className="text-xs mt-3" style={{ color: "#444", fontFamily: "'IBM Plex Mono', monospace" }}>
+              Эксперт-криптограф: Д.В. Назаров · Степень достоверности расшифровки: 73%
+            </p>
+          </div>
+
+          {/* Версии следствия */}
+          <div>
+            <div className="text-xs font-mono tracking-widest uppercase mb-6 flex items-center gap-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <span style={{ color: "#cc1a1a" }}>▸</span>
+              ОСНОВНЫЕ ВЕРСИИ СЛЕДСТВИЯ
+              <span style={{ flex: 1, height: "1px", background: "#1f1f1f", display: "block" }} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {versions.map((v) => (
+                <div
+                  key={v.num}
+                  className="p-6 relative overflow-hidden group transition-all duration-300 hover:-translate-y-1"
+                  style={{ background: "#0e0e0e", border: "1px solid #1f1f1f", borderTop: `2px solid ${v.probColor}` }}
+                >
+                  <div
+                    className="absolute top-0 right-0 text-6xl font-bold opacity-5 select-none"
+                    style={{ fontFamily: "'Oswald', sans-serif", color: v.probColor, lineHeight: 1 }}
+                  >
+                    {v.num}
+                  </div>
+                  <div className="mb-3">
+                    <span
+                      className="text-xs font-mono px-2 py-0.5 tracking-widest uppercase"
+                      style={{ background: `${v.probColor}20`, color: v.probColor, fontFamily: "'IBM Plex Mono', monospace" }}
+                    >
+                      {v.prob} вероятность
+                    </span>
+                  </div>
+                  <h3
+                    className="text-white font-bold mb-1"
+                    style={{ fontFamily: "'Oswald', sans-serif", fontSize: "1.2rem", letterSpacing: "0.06em" }}
+                  >
+                    Версия {v.num}: {v.title}
+                  </h3>
+                  <p className="text-xs mb-3" style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}>
+                    {v.detective}
+                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: "#777" }}>{v.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #cc1a1a 50%, #1f1f1f 80%, transparent)" }} />
+
       {/* ─── PLACEHOLDER SECTIONS ─── */}
       {[
-        { id: "uliki", title: "УЛИКИ И ДОКАЗАТЕЛЬСТВА", bg: "#0c0c0c" },
-        { id: "karta", title: "КАРТА ПОИСКА И СВИДЕТЕЛИ", bg: "#0a0a0a" },
-        { id: "kontakty", title: "ПРЕСС-ЦЕНТР И КОНТАКТЫ", bg: "#0c0c0c" },
+        { id: "karta", title: "КАРТА ПОИСКА И СВИДЕТЕЛИ", bg: "#0a0a0a", num: 3 },
+        { id: "kontakty", title: "ПРЕСС-ЦЕНТР И КОНТАКТЫ", bg: "#0c0c0c", num: 4 },
       ].map((s, i) => (
         <div key={s.id}>
           <section id={s.id} className="py-24" style={{ background: s.bg }}>
@@ -429,7 +591,7 @@ export default function Index() {
                 className="text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-3"
                 style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace" }}
               >
-                <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ {i + 2}
+                <span style={{ color: "#cc1a1a" }}>▸</span> РАЗДЕЛ {s.num}
               </div>
               <h2
                 className="font-bold text-white mb-4"
@@ -442,7 +604,7 @@ export default function Index() {
               </p>
             </div>
           </section>
-          {i < 2 && (
+          {i < 1 && (
             <div style={{ height: "2px", background: "linear-gradient(90deg, transparent, #1f1f1f 20%, #333 50%, #1f1f1f 80%, transparent)" }} />
           )}
         </div>
